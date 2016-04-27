@@ -65,6 +65,11 @@ class AdminUsersController extends AppController
                 $this->Flash->error(__('The admin user could not be saved. Please, try again.'));
             }
         }
+        $this->loadModel('UsersType');
+        $usersTypes = $this->UsersType->find('list', [
+            'fields' => ['UsersType.id', 'UsersType.users_type_name']
+        ]);
+        $this->set(compact('usersTypes'));
     }
 
     /**
@@ -80,13 +85,19 @@ class AdminUsersController extends AppController
             throw new NotFoundException(__('Invalid admin user'));
         }
         if ($this->request->is(array('post', 'put'))) {
-            if ($this->AdminUser->save($this->request->data)) {
+            $saveAfter = $this->AdminUser->save($this->request->data);
+            if (is_array($saveAfter)) {
                 $this->Flash->success(__('The admin user has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->Flash->error(__('The admin user could not be saved. Please, try again.'));
             }
         } else {
+            $this->loadModel('UsersType');
+            $usersTypes = $this->UsersType->find('list', [
+                'fields' => ['UsersType.id', 'UsersType.users_type_name']
+            ]);
+            $this->set(compact('usersTypes'));
             $options = array('conditions' => array('AdminUser.' . $this->AdminUser->primaryKey => $id));
             $this->request->data = $this->AdminUser->find('first', $options);
         }
