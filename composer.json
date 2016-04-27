@@ -1,0 +1,15 @@
+{
+    "name": "myprjt",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.cakephp.org"
+        }
+    ],
+    "require": {
+        "cakephp/cakephp": "2.8.*"
+    },
+    "config": {
+        "vendor-dir": "Vendor/"
+    }
+}
