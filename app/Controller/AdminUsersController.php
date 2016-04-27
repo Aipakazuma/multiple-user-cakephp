@@ -27,7 +27,7 @@ class AdminUsersController extends AppController
      *
      * @return void
      */
-    public function index()
+    public function admin_index()
     {
         $this->AdminUser->recursive = 0;
         $this->set('adminUsers', $this->Paginator->paginate());
@@ -40,7 +40,7 @@ class AdminUsersController extends AppController
      * @param string $id
      * @return void
      */
-    public function view($id = null)
+    public function admin_view($id = null)
     {
         if (!$this->AdminUser->exists($id)) {
             throw new NotFoundException(__('Invalid admin user'));
@@ -54,7 +54,7 @@ class AdminUsersController extends AppController
      *
      * @return void
      */
-    public function add()
+    public function admin_add()
     {
         if ($this->request->is('post')) {
             $this->AdminUser->create();
@@ -74,7 +74,7 @@ class AdminUsersController extends AppController
      * @param string $id
      * @return void
      */
-    public function edit($id = null)
+    public function admin_edit($id = null)
     {
         if (!$this->AdminUser->exists($id)) {
             throw new NotFoundException(__('Invalid admin user'));
@@ -99,7 +99,7 @@ class AdminUsersController extends AppController
      * @param string $id
      * @return void
      */
-    public function delete($id = null)
+    public function admin_delete($id = null)
     {
         $this->AdminUser->id = $id;
         if (!$this->AdminUser->exists()) {
@@ -117,7 +117,7 @@ class AdminUsersController extends AppController
     /**
      * @return \Cake\Network\Response|null
      */
-    public function login()
+    public function admin_login()
     {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
@@ -130,7 +130,7 @@ class AdminUsersController extends AppController
     /**
      * @return \Cake\Network\Response|null
      */
-    public function logout()
+    public function admin_logout()
     {
         return $this->redirect($this->Auth->logout());
     }

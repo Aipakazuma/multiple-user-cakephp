@@ -27,22 +27,22 @@ class AppController extends Controller
         'Flash',
         'Auth' => [
             'loginAction' => [
-                'controller' => 'admin_users',
+                'controller' => 'users',
                 'action' => 'login'
             ],
             'loginRedirect' => [
-                'controller' => 'indexes',
+                'controller' => 'users',
                 'action' => 'index'
             ],
             'logoutRedirect' => [
-                'controller' => 'admin_users',
+                'controller' => 'users',
                 'action' => 'login'
             ],
             'authError' => 'ユーザー名、パスワードを間違えています。',
             'authenticate' => [
                 'Form' => [
                     'passwordHasher' => 'Blowfish',
-                    'userModel' => 'AdminUser',
+                    'userModel' => 'User',
                     'fields' => [
                         'username' => 'email'
                     ]
@@ -50,4 +50,41 @@ class AppController extends Controller
             ]
         ]
     ];
+
+    public function beforeFilter()
+    {
+        if (isset($this->params['prefix']) && $this->params['prefix'] === 'admin') {
+            $this->layout = 'admin';
+            $this->_setAdminAuthParameter();
+        }
+        parent::beforeFilter();
+    }
+
+    private function _setAdminAuthParameter() {
+        $this->Auth->authenticate = [
+            'Form' => [
+                'userModel' => 'AdminUser',
+                'passwordHasher' => 'Blowfish',
+                'fields' => [
+                    'username' => 'email'
+                ]
+            ]
+        ];
+        $this->Auth->loginAction = [
+            'controller' => 'users',
+            'action' => 'admin_login',
+            'admin' => true
+        ];
+        $this->Auth->loginRedirect = [
+            'controller' => 'admin_users',
+            'action' => 'admin_index',
+            'admin' => true
+        ];
+        $this->Auth->logoutRedirect = [
+            'controller' => 'users',
+            'action' => 'admin_login',
+            'admin' => true
+        ];
+        AuthComponent::$sessionKey = "Auth.Owner";
+    }
 }

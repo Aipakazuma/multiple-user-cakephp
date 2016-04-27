@@ -10,6 +10,11 @@ App::uses('AppController', 'Controller');
 class UsersController extends AppController
 {
 
+    public function beforeFilter() {
+        $this->Auth->allow(['add']);
+        parent::beforeFilter();
+    }
+
     /**
      * Components
      *
@@ -126,6 +131,27 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|null
      */
     public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
+    }
+
+    /**
+     * @return \Cake\Network\Response|null
+     */
+    public function admin_login()
+    {
+        if ($this->request->is('post')) {
+            if ($this->Auth->login()) {
+                return $this->redirect($this->Auth->redirectUrl());
+            }
+            $this->Flash->error(__('Username or password is incorrect'));
+        }
+    }
+
+    /**
+     * @return \Cake\Network\Response|null
+     */
+    public function admin_logout()
     {
         return $this->redirect($this->Auth->logout());
     }
