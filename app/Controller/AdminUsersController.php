@@ -30,6 +30,16 @@ class AdminUsersController extends AppController
     public function admin_index()
     {
         $this->AdminUser->recursive = 0;
+        $this->loadModel('UsersType');
+        $users = $this->Auth->user();
+        $usersType = $this->UsersType->find('first', [
+            'conditions' => ['UsersType.id' => $users['users_types_id']]
+        ]);
+        if (1 <= $usersType['UsersType']['priority']) {
+            $this->Paginator->settings = [
+                'conditions' => ['AdminUser.users_types_id' => 2]
+            ];
+        }
         $this->set('adminUsers', $this->Paginator->paginate());
     }
 
